@@ -2,39 +2,136 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
-    </head>
-    <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
+
+<head>
+    <title>{% block title %}Auctions{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap" rel="stylesheet">
+    <style>
+        #font_G {
+            font-family: 'Gochi Hand', cursive;
+        }
+
+        a {
+            color: rgb(44, 44, 44);
+        }
+
+        a:hover {
+            color: purple;
+            text-decoration: none;
+        }
+
+        textarea {
+            border: 1px solid #999999;
+            width: 100%;
+            
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark fixed-top ">
+        <img src="{% static 'img/comercio-y-compras.png' %}" width="35px"><a class="navbar-brand" href="/">
+            <h3 id="font_G"> Auctions Web Page</h3>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href=""><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'logout' %}"> log Out </a>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">log In</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <a class="nav-link"> Signed in as <strong>{{ user.username }}</strong></a>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'register' %}">Register </a>
+                    {% endif %}
+                </li>
+
+
+
+            </ul>
+
         </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+    </nav>
+
+    <hr>
+    <hr>
+
+    <!-- <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Register</a>
+        </li>
+        {% endif %}
+    </ul> -->
+
+
+
+    <div style="margin: 60px">
+
+        <div role="tabpanel">
+
+            <ul class="nav nav-tabs" role="taplist">
+                <li role="presentation" class="active">
+                    <a class="nav-link  " role="tap" data-toggle="tab" href="{% url 'index' %}">Active
+                        Listings</a>
                 </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                <li role="presentation">
+                    <a class="nav-link" role="tap" data-toggle="tab" href="{% url 'show_categories' %}">Categories</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                {% if user.is_authenticated %}
+                <li role="presentation">
+                    <a class="nav-link" role="tap" data-toggle="tab" href="/watchlist/{{user.id}}">Watchlist</a>
+                </li role="presentation" class="nav-item">
+                <a class="nav-link " href="{% url 'create_list' %}">Created Listing</a>
                 </li>
-            {% endif %}
-        </ul>
-        <hr>
-        {% block body %}
-        {% endblock %}
-    </body>
+                {% else %}
+
+                {% endif %}
+
+            </ul>
+
+
+            <hr>
+            <div class="tab-content">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        function alerta(){
+            Swal.fire({
+                title: "Bienvenido"
+            });
+        }
+    </script>
+</body>
+
 </html>

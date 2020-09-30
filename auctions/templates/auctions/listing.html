@@ -1,0 +1,128 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="tap-pane" role="tabpanel" id="{% url 'index' %}">
+  <div class="container">
+
+
+
+    <div class="row">
+
+      <div class="col-sm">
+        {%if alert%}
+        <div class="alert alert-warning">
+          <strong>Warning!</strong> {{alert}}.
+        </div>
+        {% endif%}
+        <div class="card text-center" style="width: 30rem; margin-top:70px">
+          <img style="width:60%; margin:20px" src="{{ listing.image_url }}" class="card-img-top  mx-auto d-block"
+            alt="...">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text"> </p>
+            {% if user.is_authenticated %}
+            {% if listing.estate == 'Act' %}
+            <form class="form-inline" action="/bid/{{listing.id}}" method="POST">
+              {% csrf_token %}
+              <input type="text" value="{{user.id}}" hidden name="user">
+
+              <div class="form-group mx-sm-3 mb-2">
+                <label for="inputPassword2" class="sr-only"></label>
+                <input type="text" class="form-control" id="inputPassword2" placeholder="$00,00" name="bid">
+              </div>
+              <button type="submit" class="btn btn-primary mb-2">Sen Bid</button>
+            </form>
+            {% else %}
+
+            {% endif %}
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+      
+      <div class="col-sm">
+        <div class="d-flex flex-column">
+          <div class="p-2 text-center">
+            <h3> Listing: {{ listing.name }} </h3>
+          </div>
+
+          <div class="p-2">
+            <h4>Description:</h4>
+            <h6>{{listing.descrpition}}</h6>
+          </div>
+          <div class="p-2">
+            {% if listing.estate == 'Act' %}
+            <h4>Price: </h4>
+            <h6>${{listing.price}},00</h6> 
+            {%if user.id == listing.user.id%}
+            <form action="/edit/{{listing.id}}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Finish</button>
+            </form>
+            {%endif%}
+            {%endif%}
+            {% if listing.estate == 'Inact' %}
+
+            <h6>The product is not available</h6>
+            {%if user.id == listing.user.id%}
+            <form action="/edit/{{listing.id}}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">Activate</button>
+            </form>
+            {%endif%}
+            {%endif%}
+
+          </div>
+          <div class="p-2">
+            <h4>Category: </h4>
+            <h6>{{listing.category.name}}</h6>
+          </div>
+          <div class="p-2">
+            <h4>Create Date: </h4>
+            <h6>{{listing.create}}</h6>
+          </div>
+
+
+          <div class="p-2">
+            {% if user.is_authenticated %}
+            <form action="/comment/{{listing.id}}" method="POST">
+              {% csrf_token %}
+              <input type="text" hidden name="user" value="{{user.id}}">
+              <p><textarea name="comment" placeholder="Share your opinion"></textarea></p>
+
+              <p><button type="submit" class="btn btn-primary">Add Comment</button></p>
+
+            </form>
+            {% endif %}
+            </h5>
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div>
+    <div>
+      <h3 style="text-align: center; margin:30px;">Comments</h3>
+    </div>
+    {% for comment in comments %}
+    <div>
+      <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h5 class="card-title">{{comment.user}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted"> </h6>
+          <p class="card-text">{{comment.text}}</p>
+          <!-- <a href="#" class="card-link"></a>
+          <a href="#" class="card-link"></a> -->
+        </div>
+      </div>
+    </div>
+    {%endfor%}
+  </div>
+
+</div>
+
+{% endblock %}

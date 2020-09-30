@@ -15,12 +15,8 @@
                 <div class="card-body">
                     <p class="card-text"><a href="/list/{{ listing.id }}"> {{ listing.name }} </a>
                     </p>
-                    <p class="card-text"><a> 
-                        {% if listing.estate == 'Inact' %}
-                        <h6>The product is not available</h6>
-                        {%else%}
-                        <strong> Price: ${{listing.price}},00 </strong> </p>
-                        {%endif%}
+                    <p class="card-text"><a> <strong> Price: ${{listing.price}},00 </strong> </p>
+
                     <h6 class="card-subtitle mb-2 text-muted"> <small>Created {{listing.create}}</small> </h6>
                 </div>
 

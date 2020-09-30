@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="tap-pane " role="tabpanel" id="{% url 'show_categories' %}">
+
+    <div class="container">
+        <ul class="list-group list-group-flush">
+        {% for bid in bids %}
+        
+            <li class="list-group-item " > <strong> Listing: </strong> <a href="/list/{{bid.listing.id}}"> {{bid.listing.name}}</a>, <strong> Value bid:</strong> ${{bid.value}},00  <strong>Estate:</strong> {{bid.listing.estate}}ive </li>
+            
+        {% endfor %}
+        </ul>
+
+    </div>
+
+</div>
+{% endblock %}
