@@ -5,13 +5,41 @@
 <div class="tap-pane " role="tabpanel" id="{% url 'show_categories' %}">
 
     <div class="container">
-        <ul class="list-group list-group-flush">
-        {% for bid in bids %}
-        
-            <li class="list-group-item " > <strong> Listing: </strong> <a href="/list/{{bid.listing.id}}"> {{bid.listing.name}}</a>, <strong> Value bid:</strong> ${{bid.value}},00  <strong>Estate:</strong> {{bid.listing.estate}}ive </li>
-            
-        {% endfor %}
-        </ul>
+        <table class="table " style="width:100%">
+            <thead class="thead-dark">
+
+                <tr>
+                    <th>Listing </th>
+                    <th> Value </th>
+                    <th> State </th>
+                    <th> </th>
+                </tr>
+
+            </thead>
+            {% for watch in watchlists %}
+            <tr>
+
+                <td> <a href="/list/{{bid.listing.id}}"> {{watch.listing.name}}</a> </td>
+
+                <td> ${{watch.listing.price}},00 </td>
+
+                <td> {{watch.listing.estate}}ive </td>
+
+                <td>
+                    <form action="/watchlist/{{user.id}}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" hidden name="id_watch" value="{{watch.id}}">
+                        <button class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+
+
+
+            </tr>
+            {% endfor %}
+
+        </table>
+
 
     </div>
 

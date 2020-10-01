@@ -3,11 +3,11 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import Listing,User,Category, Bid,Comment
+from .models import Listing,User,Category, Bid, Comment, Watchlist
 
 
 def index(request):
-    listings= Listing.objects.all()
+    listings= Listing.objects.filter(estate='Act')
     return render(request, "auctions/index.html", {"listings": listings})
 
 
@@ -20,9 +20,24 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         # Check if authentication successful
+       
         if user is not None:
+            bids_win=[]
+            message =' ' 
+            if Bid.objects.filter(user=user):
+                bids=Bid.objects.filter(user=user)
+                
+                for bid in bids:
+                    if (bid.listing.price == bid.value and bid.listing.estate == 'Inact' ):
+                        message='You win the next bids'
+                        bids_win.append(bid)
+
+            listings= Listing.objects.filter(estate='Act')
+            
+
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            #return HttpResponseRedirect(reverse("index"))
+            return render(request, "auctions/index.html", {"listings": listings, "message": message, "bids": bids_win})
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -135,8 +150,26 @@ def show_category(request, id):
 
 
 def show_watchlist(request,id):
-    bids = Bid.objects.filter(user=id)
-    return render(request,"auctions/watchlist.html",{"bids":bids})
+
+    if request.method == 'POST':
+        watch = Watchlist.objects.get(pk=request.POST['id_watch']) 
+        watch.delete()
+       
+
+    watchlists = Watchlist.objects.filter(user=id)
+
+    return render(request,"auctions/watchlist.html",{"watchlists":watchlists})
+
+def add_watchlist(request,id):
+    if request.method == 'POST':
+        userk = User.objects.get(pk=id)
+        listing = Listing.objects.get(pk=request.POST['listing'])
+        watchlist=Watchlist.objects.create(user=userk, listing=listing)
+        watchlist.save()
+
+    comments=Comment.objects.filter(listing=request.POST['listing'])
+    return render(request, "auctions/listing.html", {"listing": listing, "comments":comments})
+
 
 def edit_list(request, id):
 

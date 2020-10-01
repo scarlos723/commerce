@@ -16,7 +16,16 @@
         </div>
         {% endif%}
         <div class="card text-center" style="width: 30rem; margin-top:70px">
-          <img style="width:60%; margin:20px" src="{{ listing.image_url }}" class="card-img-top  mx-auto d-block"
+
+          <form action="/add_watch/{{user.id}}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="listing" hidden value="{{listing.id}}">
+            <button type="submit" class="btn btn-ligth"> Add to watchlist </button>
+          </form>
+
+
+
+          <img style="width:50%; margin:20px" src="{{ listing.image_url }}" class="card-img-top  mx-auto d-block"
             alt="...">
           <div class="card-body">
             <h5 class="card-title"></h5>
@@ -41,25 +50,25 @@
 
         </div>
       </div>
-      
+
       <div class="col-sm">
         <div class="d-flex flex-column">
           <div class="p-2 text-center">
-            <h3> Listing: {{ listing.name }} </h3>
+            <h4> Listing: {{ listing.name }} </h4>
           </div>
 
           <div class="p-2">
-            <h4>Description:</h4>
+            <h5>Description:</h5>
             <h6>{{listing.descrpition}}</h6>
           </div>
           <div class="p-2">
             {% if listing.estate == 'Act' %}
-            <h4>Price: </h4>
-            <h6>${{listing.price}},00</h6> 
+            <h5>Price: </h5>
+            <h6>${{listing.price}},00</h6>
             {%if user.id == listing.user.id%}
             <form action="/edit/{{listing.id}}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Finish</button>
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Close</button>
             </form>
             {%endif%}
             {%endif%}
@@ -69,18 +78,18 @@
             {%if user.id == listing.user.id%}
             <form action="/edit/{{listing.id}}" method="POST">
               {% csrf_token %}
-              <button type="submit" class="btn btn-success">Activate</button>
+              <button type="submit" class="btn btn-success">Open</button>
             </form>
             {%endif%}
             {%endif%}
 
           </div>
           <div class="p-2">
-            <h4>Category: </h4>
+            <h5>Category: </h5>
             <h6>{{listing.category.name}}</h6>
           </div>
           <div class="p-2">
-            <h4>Create Date: </h4>
+            <h5>Create Date: </h5>
             <h6>{{listing.create}}</h6>
           </div>
 

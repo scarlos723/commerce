@@ -7,11 +7,7 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-class Watchlist(models.Model):
-    user: models.ForeignKey(User, on_delete = models.CASCADE, related_name="comments_created")
-    
-    def __str(self):
-        return f"{self.id}: {self.user}"
+
         
 class Category(models.Model):
     name = models.CharField(max_length=128)
@@ -32,7 +28,7 @@ class Listing (models.Model):
     estate=models.CharField(max_length=8, choices=STATES, default='Act')
     image_url=models.CharField(max_length=128)
     category=models.ForeignKey(Category, on_delete = models.CASCADE, related_name="listing_cat_relation",null=True) #puede o no tener una lista asociada
-    watchlist = models.ForeignKey(Watchlist, on_delete = models.CASCADE, related_name="listing_relation",blank=True,null=True) #puede o no tener una lista asociada
+   
     
     def __str(self):
         return f"{self.id}: {self.name}, {self.create}"
@@ -44,7 +40,7 @@ class Bid(models.Model):
 
     value = models.IntegerField()
     def __str(self):
-        return f"{self.id}: {self.user} {self.listing}, {self.value}"
+        return f"{self.id}: {self.user}, {self.listing}, {self.value}"
 
 class Comment (models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE, related_name="comments_created")
@@ -55,3 +51,9 @@ class Comment (models.Model):
     def __str(self):
         return f"{self.id}: {self.listing}, {self.text}"
 
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE, related_name="watch_created")
+    listing =  models.ForeignKey(Listing, on_delete = models.CASCADE, related_name="watch_relation", null=True, blank=True)
+
+    def __str(self):
+        return f"{self.id}: {self.user},{self.listing}"
